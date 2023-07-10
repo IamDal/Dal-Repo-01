@@ -1,2 +1,2 @@
 # Dal-Repo-01
-DAta science course tutorial
+Data science course tutorial

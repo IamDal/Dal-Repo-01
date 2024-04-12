@@ -4,7 +4,7 @@ import os
 import config
 # Import data visualization libraries
 import matplotlib.pyplot as plt 
-import data
+from data import Preprocess
 import seaborn as sns 
 import pickle
 # Import Classifiers
@@ -27,7 +27,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 
 class  TrainModel:
-    def__init__(self):
+    def __init__(self):
         self.df = self._read_df()
 
     def _read_df(self):
@@ -38,7 +38,7 @@ class  TrainModel:
             print(e)
             pdo = Preprocess()
             pdo.clean_df()
-        return self.df = read_csv(config.PROCESSED_DATA_PATH)
+        return pd.read_csv(config.PROCESSED_DATA_PATH)
 
     def _split_data(self):
         self.X = self.df.drop('Exited', axis=1)
@@ -63,15 +63,16 @@ class  TrainModel:
             transformers=[
                 ('num', numerical_transformer, self.num),
                 ('cat', categorical_transformer, self.col)])
+        return preprocessor
 
-    def _train_model(self):
+    def _train_model(self, preprocessor):
         def fit(model):
             name = type(model.named_steps['model']).__name__
             print(f'Fitting to {name}')
             model.fit(self.Xtrain, self.Ytrain)
             predictions = model.predict_proba(self.Xtest)[:, 1]
             auc_roc = roc_auc_score(self.Ytest, predictions)
-            return auc_roc
+            return {'model_name' : name, 'score' : auc_roc, 'model': model}
 
         # Set hyperparameters for XGBClassifier
         XGB = XGBClassifier(**{'n_estimators': 810, 'learning_rate': 0.07921079869615913, 'max_depth': 5,
@@ -90,17 +91,19 @@ class  TrainModel:
         XGB_best = Pipeline(steps=[('preprocessor', preprocessor), ('model', XGB)])
         CAT_best = Pipeline(steps=[('preprocessor', preprocessor), ('model', CATB)])
         LGBM_best = Pipeline(steps=[('preprocessor', preprocessor), ('model', LGBM)])
+        
+        XGB_results = fit(XGB_best)
+        LGBM_results = fit(LGBM_best)
+        CAT_results = fit(CAT_best)
 
-        return (print(f'XGBoostClassifier = {fit(XGB_best)}')
-                    print(f'CatBoostClassifier = {fit(CAT_best)}')
-                    print(f'LGBMClassifier = {fit(LGBM_best)}'))
+        return [LGBM_results,XGB_results,CAT_results]
 
-    def _train_voting_classifier(self):
+    def _train_voting_classifier(self,models):
         # Create a VotingClassifier with the three XGBoost models
         voting = VotingClassifier(estimators=[
-            ('Model1', LGBM_best),
-            ('Model2', XGB_best),
-            ('Model3', CAT_best)
+            ('Model1', models[0]['model']),
+            ('Model2', models[1]['model']),
+            ('Model3', models[2]['model'])
         ], voting='soft', weights = [0.5, 0.3, 0.2], flatten_transform=True)
 
         voting.fit(self.Xtrain, self.Ytrain)
@@ -110,14 +113,14 @@ class  TrainModel:
 
         auc_roc = roc_auc_score(self.Ytest, predictions)
         acuu = accuracy_score(self.Ytest, predict) 
-        return {'auc_roc_score':auc_roc, 'accuracy':acuu}
+        return {'model':voting, 'auc_roc_score':auc_roc, 'accuracy':acuu}
 
-    def _save_model(self):
+    def _save_model(self, voting):
         with open(config.SAVE_MODEL,'wb') as f:
             pickle.dump(voting, f)
 
     @staticmethod
-    def _load_model():
+    def load_model():
         with open('model.pkl','rb') as f:
             saved_model = pickle.load(f)
 
@@ -125,9 +128,9 @@ class  TrainModel:
         print(f'Model training Initiated')
         self._split_data()
         print(f'Data split @80% train & 20% validate')
-        self._create_pipeline()
-        self._train_model()
-        self._train_voting_classifier()
+        preprocessor = self._create_pipeline()
+        results = self._train_model(preprocessor)
+        voting_model, score, accuracy = self._train_voting_classifier(results)
         print(f'saving...')
-        self._save_model()
+        self._save_model(voting_model)
         print(f'model successfully saved at: {config.SAVE_MODEL}')

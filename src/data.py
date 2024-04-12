@@ -13,7 +13,7 @@ class LoadData:
     def _load_data(self):
         if not os.path.exists(config.DATA_PATH):
             raise FileExistsError(f'File not found!')
-        self.df = read_csv(config.DATA_PATH)
+        self.df = pd.read_csv(config.DATA_PATH)
 
 class Preprocess(LoadData):
     def __init__(self):
@@ -36,7 +36,7 @@ class Preprocess(LoadData):
         print(f'Data Cleaning Successful. File Location: {config.PROCESSED_DATA_PATH}')
         return self.df
 
-    def _encode_surnames(self,columns:List[str]):
+    def _encode_surnames(self,columns: list[str]):
         encoder = LabelEncoder()
         self.df['Surname_encoded'] = encoder.fit_transform(self.df['Surname'])
         self.df.drop(columns, axis=1, in_place=True)
@@ -45,6 +45,7 @@ class Preprocess(LoadData):
         self.df.dropna(axis=0, in_place=True)
 
     def _create_new_features(self):
+        encoder = LabelEncoder()
         age = list(range(30,81,10))
         for i,ages in enumerate(age):
             if i == 0:

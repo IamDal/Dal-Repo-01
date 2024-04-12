@@ -1,0 +1,5 @@
+# To activate conda
+$ conda activate bankchurn
+
+# to deactivate conda
+$ conda deactivate

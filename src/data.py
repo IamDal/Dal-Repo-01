@@ -14,6 +14,7 @@ class LoadData:
         if not os.path.exists(config.DATA_PATH):
             raise FileExistsError(f'File not found!')
         self.df = pd.read_csv(config.DATA_PATH)
+        
 
 class Preprocess(LoadData):
     def __init__(self):
@@ -22,7 +23,7 @@ class Preprocess(LoadData):
     def clean_df_predict(self,df=pd.DataFrame()):
         self.df = df
         self._drop_missing_values()
-        self.df._encode_surnames(config.COLUMNS_TO_REMOVE)
+        self._encode_surnames(config.COLUMNS_TO_REMOVE)
         self._create_new_features()
         return self.df
 
@@ -30,7 +31,7 @@ class Preprocess(LoadData):
         print(f'Data Cleaning Initiated')
         self._load_data()
         self._drop_missing_values()
-        self.df._encode_surnames(config.COLUMNS_TO_REMOVE)
+        self._encode_surnames(config.COLUMNS_TO_REMOVE)
         self._create_new_features()
         self._save_csv()
         print(f'Data Cleaning Successful. File Location: {config.PROCESSED_DATA_PATH}')
@@ -39,15 +40,16 @@ class Preprocess(LoadData):
     def _encode_surnames(self,columns: list[str]):
         encoder = LabelEncoder()
         self.df['Surname_encoded'] = encoder.fit_transform(self.df['Surname'])
-        self.df.drop(columns, axis=1, in_place=True)
+        self.df.drop(columns, axis=1, inplace=True)
     
     def _drop_missing_values(self):
-        self.df.dropna(axis=0, in_place=True)
+        self.df.dropna(axis=0, inplace=True)
 
     def _create_new_features(self):
         encoder = LabelEncoder()
         age = list(range(30,81,10))
-        for i,ages in enumerate(age):
+        print(self.df)
+        for i, ages in enumerate(age):
             if i == 0:
                 condition = self.df['Age'] < ages
                 self.df.loc[condition,'Generation'] = i*10

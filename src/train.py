@@ -8,6 +8,8 @@ from data import Preprocess
 import seaborn as sns 
 import pickle
 # Import Classifiers
+import sys
+sys.path.append('/opt/conda/lib/python3.12/site-packages')
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
 from catboost import CatBoostClassifier
@@ -121,7 +123,7 @@ class  TrainModel:
 
     @staticmethod
     def load_model():
-        with open('model.pkl','rb') as f:
+        with open(config.SAVE_MODEL,'rb') as f:
             saved_model = pickle.load(f)
 
     def train(self):

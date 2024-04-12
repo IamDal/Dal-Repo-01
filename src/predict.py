@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns 
 import pickle
 
+
+
 class Customer:
     def __init__(self, CustomerId, Surname, CreditScore, Geography,
        Gender, Age, Tenure, Balance, NumOfProducts, HasCrCard,

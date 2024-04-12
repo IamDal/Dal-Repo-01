@@ -32,21 +32,19 @@ from sklearn.impute import SimpleImputer
 
 
 class Customer:
-    def __init__(self, CustomerId, Surname, CreditScore, Geography,
-       Gender, Age, Tenure, Balance, NumOfProducts, HasCrCard,
-       IsActiveMember, EstimatedSalary):
-        self.CustomerId = CustomerId
-        self.Surname = Surname
-        self.Creditscore = CreditScore
-        self.Geography = Geography
-        self.Gender = Gender
-        self.Age = Age
-        self.Tenure = Tenure
-        self.Balance = Balance
-        self.NumOfProducts = NumOfProducts
-        self.HasCrCard = HasCrCard
-        self.IsActiveMember = IsActiveMember
-        self.EstimatedSalary = EstimatedSalary
+    def __init__(self, CustomerData):
+        self.CustomerId = CustomerData[0]
+        self.Surname = CustomerData[1]
+        self.Creditscore = CustomerData[2]
+        self.Geography = CustomerData[3]
+        self.Gender = CustomerData[4]
+        self.Age = CustomerData[5]
+        self.Tenure = CustomerData[6]
+        self.Balance = CustomerData[7]
+        self.NumOfProducts = CustomerData[8]
+        self.HasCrCard = CustomerData[9]
+        self.IsActiveMember = CustomerData[10]
+        self.EstimatedSalary = CustomerData[11]
 
     def CustomerDataFrame(self):
         data = {
@@ -82,12 +80,19 @@ class Predict:
     
 print(os.getcwd())
 predictor = Predict()
-churn_probability = predictor.predict_churn(Customer(15634602,'Hargrave',619,'France','Female',42,2,0,1,1,1,101348.88))
+
+customer1 = [15647311,'Hill',608,'Spain','Female',41,1,83807.86,1,0,1,112542.58,0]
+customer2 = [15619304,'Onio',502,'France','Female',42,8,159660.8,3,1,0,113931.57,1]
+customer3 = [15701354,'Boni',699,'France','Female',39,1,0,2,0,0,93826.63,0]
+customer4 = [15574012,'Chu',645,'Spain','Male',44,8,113755.78,2,1,0,149756.71,1]
+customer5 = [15656148,'Obinna',376,'Germany','Female',29,4,115046.74,4,1,0,119346.88,1]
+
+current_customer = customer3
+churn_probability = predictor.predict_churn(Customer(current_customer))
 
 train_model = TrainModel.load_model()
-print(train_model)
-pred = train_model.predict(churn_probability)
-print(pred)
+pred = train_model.predict_proba(churn_probability)[:, 1]
+print(f'customer {current_customer[1]} is {pred}% likely to churn!')
 
 
 

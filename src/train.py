@@ -109,7 +109,6 @@ class  TrainModel:
         ], voting='soft', weights = [0.5, 0.3, 0.2], flatten_transform=True)
 
         voting.fit(self.Xtrain, self.Ytrain)
-
         predictions = voting.predict_proba(self.Xtest)[:, 1]
         predict = voting.predict(self.Xtest)
 
@@ -120,11 +119,13 @@ class  TrainModel:
     def _save_model(self, voting):
         with open(config.SAVE_MODEL,'wb') as f:
             pickle.dump(voting, f)
+        print('model saved successfully!')
 
     @staticmethod
     def load_model():
         with open(config.SAVE_MODEL,'rb') as f:
-            saved_model = pickle.load(f)
+            return pickle.load(f)
+  
 
     def train(self):
         print(f'Model training Initiated')
@@ -132,7 +133,10 @@ class  TrainModel:
         print(f'Data split @80% train & 20% validate')
         preprocessor = self._create_pipeline()
         results = self._train_model(preprocessor)
-        voting_model, score, accuracy = self._train_voting_classifier(results)
+        voting_model, score, accuracy = self._train_voting_classifier(results).values()
+        print(voting_model)
+        print(score)
+        print(accuracy)
         print(f'saving...')
         self._save_model(voting_model)
         print(f'model successfully saved at: {config.SAVE_MODEL}')

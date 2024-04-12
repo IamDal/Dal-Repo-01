@@ -9,6 +9,26 @@ import matplotlib.pyplot as plt
 import seaborn as sns 
 import pickle
 
+import sys
+sys.path.append('/opt/conda/lib/python3.12/site-packages')
+
+from xgboost import XGBClassifier
+from lightgbm import LGBMClassifier
+from catboost import CatBoostClassifier
+from sklearn.ensemble import VotingClassifier
+# space to delete
+# Import model selection
+from sklearn.model_selection import train_test_split
+
+# Import accuracy metrics
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import roc_auc_score
+
+# Import pipeline and preprocessing imputers and encoders
+from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder, LabelEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
 
 
 class Customer:
@@ -65,6 +85,7 @@ predictor = Predict()
 churn_probability = predictor.predict_churn(Customer(15634602,'Hargrave',619,'France','Female',42,2,0,1,1,1,101348.88))
 
 train_model = TrainModel.load_model()
+print(train_model)
 pred = train_model.predict(churn_probability)
 print(pred)
 

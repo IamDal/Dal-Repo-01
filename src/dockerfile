@@ -7,7 +7,7 @@ WORKDIR /app
 COPY . /app
 
 # Install needed packages specified in requirements.txt
-RUN apt-get updat && \
+RUN apt-get update && \
     apt-get install -y build-essential && \
     pip install --no-cache-dir -r requirements.txt && \
     pip install --upgrade pip && \
@@ -17,4 +17,4 @@ RUN apt-get updat && \
 EXPOSE 80
 
 # start FastAPI application
-CMD["uvicorn","main":"app","--host","0.0.0.0","--port","80"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]

@@ -5,8 +5,6 @@ import numpy as np
 import config
 from train import TrainModel
 from data import Preprocess
-import matplotlib.pyplot as plt 
-import seaborn as sns 
 import pickle
 
 import sys
@@ -79,6 +77,8 @@ class Predict:
         return self.df
     
 print(os.getcwd())
+"""    
+
 predictor = Predict()
 
 customer1 = [15647311,'Hill',608,'Spain','Female',41,1,83807.86,1,0,1,112542.58,0]
@@ -94,6 +94,7 @@ train_model = TrainModel.load_model()
 pred = train_model.predict_proba(churn_probability)[:, 1]
 print(f'customer {current_customer[1]} is {pred}% likely to churn!')
 
+"""
 
 
 

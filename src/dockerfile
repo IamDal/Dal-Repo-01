@@ -1,0 +1,20 @@
+# Use an Official python runtime as parent image
+FROM python:3.12
+# Set the working dir to /app
+WORKDIR /app
+
+# Copy current dir. contents into container in app
+COPY . /app
+
+# Install needed packages specified in requirements.txt
+RUN apt-get updat && \
+    apt-get install -y build-essential && \
+    pip install --no-cache-dir -r requirements.txt && \
+    pip install --upgrade pip && \
+    pip install --upgrade setuptools
+
+# Expose port the application will be running on
+EXPOSE 80
+
+# start FastAPI application
+CMD["uvicorn","main":"app","--host","0.0.0.0","--port","80"]

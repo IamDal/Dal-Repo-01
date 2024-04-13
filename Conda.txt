@@ -16,3 +16,44 @@ the corresponding env file under $HOME/.cargo.
 This is usually done by running one of the following (note the leading DOT):
 . "$HOME/.cargo/env"            # For sh/bash/zsh/ash/dash/pdksh
 source "$HOME/.cargo/env.fish"  # For fish
+
+fastapi==0.109.2
+pydantic>=1.2.0,<2.0.0
+
+customer1 = [15647311,'Hill',608,'Spain','Female',41,1,83807.86,1,0,1,112542.58,0]
+customer2 = [15619304,'Onio',502,'France','Female',42,8,159660.8,3,1,0,113931.57,1]
+customer3 = [15701354,'Boni',699,'France','Female',39,1,0,2,0,0,93826.63,0]
+customer4 = [15574012,'Chu',645,'Spain','Male',44,8,113755.78,2,1,0,149756.71,1]
+customer5 = [15656148,'Obinna',376,'Germany','Female',29,4,115046.74,4,1,0,119346.88,1]
+
+
+{
+  "CustomerId": 15619304,
+  "Surname": "Onio",
+  "CreditScore": 502,
+  "Geography": "France",
+  "Gender": "Female",
+  "Age": 42,
+  "Tenure": 8,
+  "Balance": 159660.8,
+  "NumOfProducts": 3,
+  "HasCrCard": 1,
+  "IsActiveMember": 0,
+  "EstimatedSalary": 113931.57
+}
+
+
+{
+  "CustomerId": 15647311,
+  "Surname": "Hill",
+  "CreditScore": 608,
+  "Geography": "Spain",
+  "Gender": "Female",
+  "Age": 41,
+  "Tenure": 1,
+  "Balance": 83807.86,
+  "NumOfProducts": 1,
+  "HasCrCard": 0,
+  "IsActiveMember": 1,
+  "EstimatedSalary": 112542.58
+}

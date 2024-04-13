@@ -1,15 +1,14 @@
+import sys
+sys.path.append('/opt/conda/lib/python3.12/site-packages')
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import os
 import config
-# Import data visualization libraries
-import matplotlib.pyplot as plt 
+
 from data import Preprocess
-import seaborn as sns 
 import pickle
 # Import Classifiers
-import sys
-sys.path.append('/opt/conda/lib/python3.12/site-packages')
+
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
 from catboost import CatBoostClassifier
@@ -134,9 +133,8 @@ class  TrainModel:
         preprocessor = self._create_pipeline()
         results = self._train_model(preprocessor)
         voting_model, score, accuracy = self._train_voting_classifier(results).values()
-        print(voting_model)
-        print(score)
-        print(accuracy)
-        print(f'saving...')
+        print(f'*** Model Successfully trained. Training score: {score}.*** ')
+        print(f'*** Accuracy : {accuracy}. ***')
+        print(f'saving model, please wait...')
         self._save_model(voting_model)
-        print(f'model successfully saved at: {config.SAVE_MODEL}')
+        print(f'Model successfully saved at: {config.SAVE_MODEL}')
